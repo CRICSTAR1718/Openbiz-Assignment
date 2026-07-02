@@ -32,7 +32,7 @@
     "maxlength": null,
     "required": false,
     "className": null,
-    "label": null,
+    "label": "declaration",
     "validators": []
   },
   {
@@ -44,7 +44,7 @@
     "maxlength": null,
     "required": false,
     "className": "btn btn-main btn-round-full",
-    "label": null,
+    "label": "Aadhaar Validate",
     "validators": []
   }
 ]
