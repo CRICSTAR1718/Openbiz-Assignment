@@ -83,19 +83,19 @@ export default function MultiStepForm() {
   const isFirstStep = currentStep === 1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8 px-4 text-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-slate-50 to-gray-100 py-8 px-4 text-slate-900">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="bg-white shadow-sm border-b-4 border-blue-600 mb-6">
-          <div className="px-6 py-4">
-            <h1 className="text-2xl font-bold text-black">
+        <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-blue-100 mb-6 rounded-xl overflow-hidden">
+          <div className="px-6 py-5 text-center">
+            <h1 className="text-3xl font-bold text-black">
               {schema.formTitle}
             </h1>
           </div>
         </div>
 
         {/* Progress Tracker */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-md p-5 mb-6 border border-blue-100">
           <ProgressTracker 
             currentStep={currentStep}
             totalSteps={totalSteps}
@@ -107,7 +107,7 @@ export default function MultiStepForm() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Form Section - Left 2 columns */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-blue-100">
               {/* Step Title and badge */}
               <div className="mb-4 flex items-center justify-between">
                 <div>
@@ -117,7 +117,7 @@ export default function MultiStepForm() {
                   </h2>
                 </div>
               </div>
-              <div className="mb-6 pb-4 border-b border-gray-100" />
+              <div className="mb-6 pb-4 border-b border-blue-100" />
 
               <form onSubmit={handleSubmit(onSubmit)}>
                 {/* Dynamic Fields */}
@@ -143,7 +143,7 @@ export default function MultiStepForm() {
 
                 {/* OTP Input Field - shown after validation */}
                 {showOtpInput && currentStep === 1 && (
-                  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="mt-6 p-5 bg-gradient-to-r from-blue-50 to-teal-50 border border-blue-200 rounded-xl">
                     <label htmlFor="otp" className="block text-sm font-semibold text-slate-900 mb-2">
                       Enter OTP (use 123456)
                     </label>
@@ -154,7 +154,7 @@ export default function MultiStepForm() {
                       onChange={(e) => setOtpValue(e.target.value)}
                       maxLength={6}
                       placeholder="Enter 6-digit OTP"
-                      className="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-slate-900 placeholder-slate-500"
+                      className="w-full px-4 py-3 border border-blue-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-slate-900 placeholder-slate-500 bg-white"
                     />
                     {otpError && (
                       <p className="mt-2 text-sm text-red-600" role="alert">
@@ -164,7 +164,7 @@ export default function MultiStepForm() {
                     <button
                       type="button"
                       onClick={handleOtpSubmit}
-                      className="mt-3 px-6 py-2 bg-emerald-600 text-white rounded-lg shadow hover:bg-emerald-700 transition-colors duration-150 font-medium"
+                      className="mt-3 px-6 py-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-lg shadow-md hover:from-teal-600 hover:to-teal-700 transition-all duration-150 font-medium"
                     >
                       Verify OTP
                     </button>
@@ -172,12 +172,12 @@ export default function MultiStepForm() {
                 )}
 
                 {/* Navigation Buttons */}
-                <div className="mt-8 flex justify-end items-center gap-3 pt-6 border-t border-gray-100">
+                <div className="mt-8 flex justify-end items-center gap-3 pt-6 border-t border-blue-100">
                   {!isFirstStep && (
                     <button
                       type="button"
                       onClick={handlePrevious}
-                      className="px-4 py-2 bg-white text-slate-900 border border-gray-200 rounded shadow-sm hover:bg-gray-50 transition-colors duration-150"
+                      className="px-4 py-2 bg-white text-slate-900 border border-blue-200 rounded-lg shadow-sm hover:bg-blue-50 transition-colors duration-150"
                     >
                       Previous
                     </button>
@@ -187,14 +187,14 @@ export default function MultiStepForm() {
                     <button
                       type="button"
                       onClick={currentStep === 1 ? handleValidateAndGenerateOtp : handleNext}
-                      className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors duration-150 font-medium"
+                      className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 transition-all duration-150 font-medium"
                     >
                       {currentStep === 1 && !showOtpInput ? currentStepData.submitButton?.label || 'Continue' : currentStepData.submitButton?.label || 'Continue'}
                     </button>
                   ) : (
                     <button
                       type="submit"
-                      className="px-6 py-2 bg-emerald-600 text-white rounded-lg shadow hover:bg-emerald-700 transition-colors duration-150 font-medium"
+                      className="px-6 py-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-lg shadow-md hover:from-teal-600 hover:to-teal-700 transition-all duration-150 font-medium"
                     >
                       Submit Application
                     </button>
@@ -206,7 +206,7 @@ export default function MultiStepForm() {
 
           {/* Info Sidebar - Right 1 column */}
           <div className="lg:col-span-1">
-            <div className="bg-blue-50 border border-blue-200 rounded shadow-sm p-6">
+            <div className="bg-gradient-to-br from-blue-50 to-teal-50 border border-blue-200 rounded-xl shadow-md p-6">
               <h3 className="text-lg font-bold text-black mb-4">
                 Aadhaar Number Requirements for Udyam Registration
               </h3>
@@ -232,7 +232,7 @@ export default function MultiStepForm() {
 
             {/* Step Notes */}
             {currentStepData.notes && currentStepData.notes.length > 0 && (
-              <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded shadow-sm p-6">
+              <div className="mt-6 bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200 rounded-xl shadow-md p-6">
                 <h3 className="text-sm font-bold text-black mb-3">
                   Important Notes
                 </h3>
@@ -250,15 +250,28 @@ export default function MultiStepForm() {
         </div>
 
         {/* Footer */}
-        <div className="mt-8 text-center text-sm text-slate-700">
-          <a 
-            href={schema.sourceUrl} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 hover:underline"
-          >
-            {schema.sourceUrl}
-          </a>
+        <div className="mt-12 bg-white/80 backdrop-blur-sm rounded-xl shadow-md border border-gray-200 p-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-center md:text-left">
+              <p className="text-sm text-slate-600 font-medium">
+                © 2024 Udyam Registration Portal. All rights reserved.
+              </p>
+              <p className="text-xs text-slate-500 mt-1">
+                Government of India • Ministry of MSME
+              </p>
+            </div>
+            <div className="flex gap-6">
+              <a href="#" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">
+                Privacy Policy
+              </a>
+              <a href="#" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">
+                Terms of Service
+              </a>
+              <a href="#" className="text-sm text-slate-600 hover:text-blue-600 transition-colors">
+                Contact Us
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

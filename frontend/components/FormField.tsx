@@ -22,7 +22,7 @@ export default function FormField({ field, register, errors, fieldNumber }: Form
             id={field.id}
             placeholder={field.placeholder}
             maxLength={field.maxLength}
-            className="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-slate-900 placeholder-slate-500"
+            className="w-full px-4 py-3 border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-slate-900 placeholder-slate-400 bg-white transition-all duration-150"
             aria-invalid={!!error}
             aria-describedby={error ? `${field.id}-error` : undefined}
             {...register(field.id)}
@@ -41,7 +41,7 @@ export default function FormField({ field, register, errors, fieldNumber }: Form
         return (
           <select
             id={field.id}
-            className="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-slate-900 bg-white"
+            className="w-full px-4 py-3 border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-slate-900 bg-white transition-all duration-150"
             aria-invalid={!!error}
             aria-describedby={error ? `${field.id}-error` : undefined}
             {...register(field.id)}
@@ -60,7 +60,7 @@ export default function FormField({ field, register, errors, fieldNumber }: Form
             <input
               type="checkbox"
               id={field.id}
-              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-200 cursor-pointer"
+              className="w-5 h-5 text-blue-600 border-blue-300 rounded focus:ring-2 focus:ring-blue-200 cursor-pointer accent-blue-600"
               aria-checked={false}
               aria-invalid={!!error}
               {...register(field.id)}

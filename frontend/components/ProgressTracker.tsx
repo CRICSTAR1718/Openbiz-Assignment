@@ -17,7 +17,7 @@ export default function ProgressTracker({ currentStep, totalSteps, stepTitles }:
           return (
             <div key={i} className="flex-1 flex items-center justify-center">
               <div
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${isActive ? 'bg-blue-600 scale-100' : 'bg-gray-300'}`}
+                className={`w-4 h-4 rounded-full transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-blue-500 to-teal-500 scale-110 shadow-md' : 'bg-blue-200'}`}
                 aria-hidden
               />
             </div>
@@ -26,9 +26,9 @@ export default function ProgressTracker({ currentStep, totalSteps, stepTitles }:
       </div>
 
       {/* Progress bar */}
-      <div className="w-full bg-gray-200 rounded h-2 overflow-hidden">
+      <div className="w-full bg-blue-100 rounded-full h-2.5 overflow-hidden">
         <div
-          className="bg-blue-600 h-2 transition-all duration-500 ease-in-out"
+          className="bg-gradient-to-r from-blue-500 to-teal-500 h-2.5 transition-all duration-500 ease-in-out rounded-full"
           style={{ width: `${progressPercentage}%` }}
           aria-valuenow={progressPercentage}
           aria-valuemin={0}
@@ -44,7 +44,7 @@ export default function ProgressTracker({ currentStep, totalSteps, stepTitles }:
           const isCurrent = stepNumber === currentStep;
 
           return (
-            <span key={index} className={isCurrent ? 'font-semibold text-blue-600' : 'text-slate-700'}>
+            <span key={index} className={isCurrent ? 'font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-600' : 'text-slate-600'}>
               {title}
             </span>
           );
