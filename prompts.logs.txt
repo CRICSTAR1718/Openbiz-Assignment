@@ -1,0 +1,221 @@
+
+## Prompt 1: Folder Structure Creation
+
+I need to set up a comprehensive project structure for the Udyam Form Assignment. This is a multi-stage web application that will handle Udyam registration forms through web scraping, frontend form submission, and backend API with database persistence.
+
+Here's what I'm looking for:
+
+ Project Overview:
+The project should be organized into three main stages:
+1. Web Scraping - to extract form field data from the Udyam portal
+2. Frontend - a Next.js application for form submission
+3. Backend - an API server with database integration
+
+ Directory Structure Requirements: 
+
+1.  scraper/  - This directory will contain all web scraping related files:
+   - A JavaScript file (scrape.js) that uses axios and cheerio for scraping
+   - Two JSON files storing scraped field data (scraped_fields_step1.json for Aadhaar, scraped_fields_step2.json for PAN)
+   - A README.md documenting the scraping process, including notes about manual verification requirements and OTP gating limitations
+
+2.  schema/  - This is crucial as it will serve as the single source of truth:
+   - Contains udyamSchema.json which will be consumed by both frontend and backend
+   - This ensures consistency across the application
+
+3.  frontend/  - A Next.js application with the following structure:
+   - app/ directory containing page.tsx (entry point) and layout.tsx
+   - components/ directory with:
+     - MultiStepForm.tsx for step control
+     - FormField.tsx as a generic field renderer
+     - ProgressTracker.tsx for showing form progress
+     - steps/ subdirectory with StepAadhaar.tsx and StepPan.tsx
+   - lib/ directory containing:
+     - schema.ts for importing and typing the udyamSchema.json
+     - validation.ts for Zod schemas derived from the main schema
+   - public/ directory for static assets
+   - package.json for dependencies
+
+4.  backend/  - API server with database integration:
+   - src/db/ containing schema.ts (Drizzle/Prisma schema matching udyamSchema.json) and client.ts
+   - src/routes/ with submit.ts handling POST /submit endpoint
+   - src/validation/ with rules.ts containing validation rules (same as frontend)
+   - src/index.ts as the entry point
+   - tests/ directory with validation.test.ts and submit.test.ts
+   - package.json for dependencies
+
+5.  Root level files: 
+   - docker-compose.yml for containerized setup (PostgreSQL + backend + frontend)
+   - README.md with comprehensive project documentation including scraping limitations and setup instructions
+
+ Important Notes: 
+- Use "client" terminology for the frontend
+- Use "server" terminology for the backend
+- Some initial setup has already been attempted, so work with existing files where possible
+- The schema should be the single source of truth for both frontend and backend
+- Validation rules should be consistent between frontend and backend
+
+The goal is to create a well-organized, maintainable project structure that follows best practices for separation of concerns and code reusability.
+
+---
+
+## Prompt 2: Schema-Driven Multi-Step Form Component
+
+I need to build a sophisticated, schema-driven multi-step form component for the Udyam registration process. The form should be completely dynamic, rendering all fields based on the udyamSchema.json file without any hardcoded field-specific JSX.
+
+ Technical Requirements: 
+
+ Technology Stack: 
+- React.js with TypeScript for type safety
+- Tailwind CSS for styling with mobile-first responsive design
+- react-hook-form for form state management and validation
+- zod for schema validation (integrated with react-hook-form)
+
+ Core Functionality: 
+
+1.  Dynamic Schema Rendering: 
+   - The form should read the udyamSchema.json file and render Step 1 (Aadhaar Verification) and Step 2 (PAN Verification) completely dynamically
+   - No field-specific JSX should be hardcoded - everything must be rendered from the schema array
+   - The component should handle different field types: text, select, checkbox
+   - Each field should render its label, placeholder, validation rules, and any conditional logic from the schema
+
+2.  Form Validation: 
+   - Use react-hook-form with zod integration for validation
+   - Validation rules should be derived from the schema's validationRegex patterns
+   - Handle required fields and conditional requirements (e.g., PAN is only required when organization type is not '1')
+   - Show appropriate error messages for validation failures
+
+3.  Multi-Step Navigation: 
+   - Implement step navigation (Previous/Next buttons)
+   - Validate current step before allowing progression to the next step
+   - Maintain form state across steps
+   - Show a progress tracker indicating current step and total steps
+
+4.  Progress Tracker: 
+   - Visual indicator showing which step the user is on
+   - Show completed steps, current step, and remaining steps
+   - Should be responsive and work well on mobile devices
+
+5.  Responsive Design: 
+   - Mobile-first approach using Tailwind CSS
+   - Form should look good and be usable on all screen sizes
+   - Appropriate spacing, font sizes, and touch targets for mobile
+   - Clean, professional UI that matches the Udyam registration portal's aesthetic
+
+ Component Structure: 
+
+The implementation should follow the folder structure already created:
+- `frontend/lib/schema.ts` - TypeScript types derived from udyamSchema.json
+- `frontend/lib/validation.ts` - Zod schemas generated from the schema
+- `frontend/components/FormField.tsx` - Generic field renderer that switches on field type
+- `frontend/components/ProgressTracker.tsx` - Progress indicator component
+- `frontend/components/MultiStepForm.tsx` - Main step controller that reads schema and manages form state
+- `frontend/app/page.tsx` - Entry point that renders the MultiStepForm
+- `frontend/app/layout.tsx` - Root layout
+
+ Schema Integration: 
+
+The form should:
+- Import the udyamSchema.json from the schema directory
+- Use the schema to determine field types, labels, placeholders, validation rules
+- Handle conditional requirements (like the PAN conditional logic)
+- Render submit buttons based on schema definitions
+- Display any UI feedback elements as specified in the schema
+
+ User Experience: 
+
+- Clear visual feedback for form validation errors
+- Smooth transitions between steps
+- Loading states for form submission
+- Accessible form controls with proper labels and ARIA attributes
+- Inline error messages near fields (matching the original site's UX pattern)
+
+The goal is to create a flexible, maintainable form component that can adapt to schema changes without code modifications, following React best practices and providing an excellent user experience.
+
+---
+
+## Prompt 3: PostgreSQL Schema and Express + Drizzle REST API
+
+I need to build a robust backend API that mirrors the frontend schema and provides data persistence with validation. The backend should use PostgreSQL (via Supabase) with Drizzle ORM for database operations and Express.js for the REST API.
+
+ Technical Requirements: 
+
+ Technology Stack: 
+- PostgreSQL database hosted on Supabase
+- Express.js for the REST API
+- Drizzle ORM for database operations and schema management
+- TypeScript for type safety
+
+ Database Schema Design: 
+
+1.  Schema Alignment: 
+   - Create a PostgreSQL schema that mirrors the udyamSchema.json structure
+   - Tables should correspond to the form steps and fields
+   - Include all fields from Step 1 (Aadhaar Verification) and Step 2 (PAN Verification)
+   - Use appropriate data types (text, boolean, etc.) matching the field types
+   - Add timestamps for created_at and updated_at
+
+2.  Constraints: 
+   - Enforce uniqueness constraint on the Aadhaar number field
+   - Add NOT NULL constraints for required fields
+   - Add appropriate check constraints for field validation (e.g., Aadhaar length)
+   - Create indexes for frequently queried fields
+
+ API Implementation: 
+
+1.  POST /submit Endpoint: 
+   - Accept JSON payload matching the form data structure
+   - Validate all fields against the same regex patterns used in the frontend
+   - Return 400 status code with field-level error messages for invalid data
+   - Handle conditional requirements (e.g., PAN validation based on organization type)
+   - Check for duplicate Aadhaar numbers before insertion
+
+2.  Validation Logic: 
+   - Implement validation rules that match the frontend Zod schemas
+   - Use the same regex patterns from udyamSchema.json
+   - Provide clear, descriptive error messages for each validation failure
+   - Return errors in a structured format (e.g., { field: "error message" })
+
+3.  Error Handling: 
+   - Return appropriate HTTP status codes (400 for validation errors, 409 for conflicts, 500 for server errors)
+   - Include detailed error messages in the response body
+   - Handle database connection errors gracefully
+   - Log errors for debugging purposes
+
+ Project Structure: 
+
+The implementation should follow the folder structure already created:
+- `backend/src/db/schema.ts` - Drizzle schema definitions matching udyamSchema.json
+- `backend/src/db/client.ts` - Supabase client configuration
+- `backend/src/validation/rules.ts` - Validation rules matching frontend regex patterns
+- `backend/src/routes/submit.ts` - POST /submit endpoint implementation
+- `backend/src/index.ts` - Express app setup and server initialization
+- `backend/tests/validation.test.ts` - Tests for validation logic
+- `backend/tests/submit.test.ts` - Tests for submit endpoint
+
+ Supabase Integration: 
+
+- Configure Supabase connection using environment variables
+- Use Supabase PostgreSQL connection string
+- Set up Drizzle to work with Supabase PostgreSQL
+- Handle connection pooling and retry logic
+- Ensure secure credential management
+
+ Data Flow: 
+
+1. Client submits form data to POST /submit
+2. API validates data against regex rules
+3. If validation fails, return 400 with field-level errors
+4. If validation passes, check for duplicate Aadhaar
+5. If duplicate exists, return 409 conflict error
+6. Insert data into PostgreSQL database
+7. Return 201 with success response
+
+ Testing: 
+
+- Write unit tests for validation rules
+- Write integration tests for the submit endpoint
+- Test with valid and invalid data
+- Test duplicate Aadhaar handling
+- Test error scenarios
+
+The goal is to create a robust, type-safe backend API that provides consistent validation with the frontend and reliable data persistence using Supabase PostgreSQL.
