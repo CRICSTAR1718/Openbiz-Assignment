@@ -38,13 +38,13 @@ export default function ProgressTracker({ currentStep, totalSteps, stepTitles }:
       </div>
 
       {/* Step text (condensed) */}
-      <div className="flex justify-between mt-2 text-sm text-gray-600">
+      <div className="flex justify-between mt-2 text-sm text-slate-800">
         {stepTitles.map((title, index) => {
           const stepNumber = index + 1;
           const isCurrent = stepNumber === currentStep;
 
           return (
-            <span key={index} className={isCurrent ? 'font-semibold text-blue-600' : 'text-gray-500'}>
+            <span key={index} className={isCurrent ? 'font-semibold text-blue-600' : 'text-slate-700'}>
               {title}
             </span>
           );

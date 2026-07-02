@@ -32,7 +32,7 @@
         {
           "id": "declaration",
           "sourceId": "ctl00_ContentPlaceHolder1_chkDecarationA",
-          "label": "REPLACE_WITH_EXACT_TEXT_FROM_LIVE_SITE",
+          "label": " I, the holder of the above Aadhaar, hereby give my consent to Ministry of MSME, Government of India, for using my Aadhaar number as alloted by UIDAI for Udyam Registration. Ministry of MSME, Government of India, have informed me that my aadhaar data will not be stored/shared.",
           "type": "checkbox",
           "required": true
         }
