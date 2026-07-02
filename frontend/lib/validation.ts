@@ -7,13 +7,14 @@ const createFieldSchema = (field: any) => {
 
   switch (field.type) {
     case 'text':
-      fieldSchema = z.string();
+      let textSchema = z.string();
       if (field.validationRegex) {
-        fieldSchema = fieldSchema.regex(new RegExp(field.validationRegex));
+        textSchema = textSchema.regex(new RegExp(field.validationRegex));
       }
       if (field.maxLength) {
-        fieldSchema = fieldSchema.max(field.maxLength);
+        textSchema = textSchema.max(field.maxLength);
       }
+      fieldSchema = textSchema;
       break;
     case 'select':
       fieldSchema = z.string();
@@ -31,7 +32,9 @@ const createFieldSchema = (field: any) => {
     if (field.type === 'checkbox') {
       // Checkbox already has refine for true
     } else {
-      fieldSchema = fieldSchema.min(1, `${field.label} is required`);
+      let stringSchema = z.string();
+      stringSchema = stringSchema.min(1, `${field.label} is required`);
+      fieldSchema = stringSchema;
     }
   }
 

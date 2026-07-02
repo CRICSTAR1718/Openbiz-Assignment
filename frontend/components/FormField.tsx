@@ -1,14 +1,15 @@
-import { UseFormRegister, FieldErrors } from 'react-hook-form';
-import { FormField as FormFieldType } from '../lib/schema';
+import type { UseFormRegister, FieldErrors } from 'react-hook-form';
+import type { FormField as FormFieldType } from '../lib/schema';
 
 interface FormFieldProps {
   field: FormFieldType;
   register: UseFormRegister<any>;
   errors: FieldErrors<any>;
   watch?: any;
+  fieldNumber?: number;
 }
 
-export default function FormField({ field, register, errors, watch }: FormFieldProps) {
+export default function FormField({ field, register, errors, fieldNumber }: FormFieldProps) {
   const error = errors[field.id];
   const errorMessage = error?.message as string;
 
@@ -21,7 +22,9 @@ export default function FormField({ field, register, errors, watch }: FormFieldP
             id={field.id}
             placeholder={field.placeholder}
             maxLength={field.maxLength}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
+            className="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-900 placeholder-gray-400"
+            aria-invalid={!!error}
+            aria-describedby={error ? `${field.id}-error` : undefined}
             {...register(field.id)}
           />
         );
@@ -38,7 +41,9 @@ export default function FormField({ field, register, errors, watch }: FormFieldP
         return (
           <select
             id={field.id}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+            className="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-900 bg-white"
+            aria-invalid={!!error}
+            aria-describedby={error ? `${field.id}-error` : undefined}
             {...register(field.id)}
           >
             {options.map((option, index) => (
@@ -51,13 +56,18 @@ export default function FormField({ field, register, errors, watch }: FormFieldP
 
       case 'checkbox':
         return (
-          <div className="flex items-start">
+          <div className="flex items-center gap-3">
             <input
               type="checkbox"
               id={field.id}
-              className="mt-1 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-200 cursor-pointer"
+              aria-checked={false}
+              aria-invalid={!!error}
               {...register(field.id)}
             />
+            <label htmlFor={field.id} className="text-sm text-gray-700">
+              {field.label} {field.required === true && <span className="text-red-500">*</span>}
+            </label>
           </div>
         );
 
@@ -68,27 +78,24 @@ export default function FormField({ field, register, errors, watch }: FormFieldP
 
   return (
     <div className="mb-6">
-      <label 
-        htmlFor={field.id} 
-        className="block text-sm font-medium text-gray-700 mb-2"
-      >
-        {field.label}
-        {field.required === true && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      
+      {field.type !== 'checkbox' && (
+        <label htmlFor={field.id} className="block text-sm font-semibold text-gray-700 mb-2">
+          {fieldNumber && `${fieldNumber}. `}{field.label}
+          {field.required === true && <span className="text-red-500 ml-1">*</span>}
+        </label>
+      )}
+
       {renderField()}
-      
+
       {error && (
-        <p className="mt-2 text-sm text-red-600 animate-pulse">
-          {errorMessage}
+        <p className="mt-2 text-sm text-red-600 flex items-center gap-2" role="alert">
+          <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden>
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+          </svg>
+          <span>{errorMessage}</span>
         </p>
       )}
-      
-      {field.type === 'checkbox' && field.label !== 'REPLACE_WITH_EXACT_TEXT_FROM_LIVE_SITE' && (
-        <p className="mt-1 text-xs text-gray-500">
-          {field.label}
-        </p>
-      )}
+
     </div>
   );
 }
